@@ -115,6 +115,8 @@ else
   print_color $GREEN "revlookup is already downloaded and moved to /bin/"
 fi
 
+wget https://raw.githubusercontent.com/Raunaksplanet/Custom-Tools/main/CRTsh.py
+
 print_color $YELLOW "Installing Go tools..."
 check_and_install_go_tool anew github.com/tomnomnom/anew@latest
 sleep 1.5
