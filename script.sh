@@ -80,6 +80,7 @@ check_and_install ruby-dev
 check_and_install ruby-full
 check_and_install libgmp-dev
 check_and_install zlib1g-dev
+check_and_install dirsearch
 
 print_color $YELLOW "Creating Tools directory..."
 mkdir -p Tools && cd Tools && print_color $GREEN "Created and navigated to Tools directory" || print_color $RED "Failed to create Tools directory"
