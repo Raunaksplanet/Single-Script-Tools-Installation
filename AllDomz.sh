@@ -12,6 +12,7 @@ assetfinder $1 | tee 2.txt &
 subdom $1 | tee 3.txt &
 subfinder -d $1 | tee 4.txt &
 shodansubgo -d $1 -s lT9OgIZTFollTgxugbEmriGCWWCQGF5k | tee 5.txt &
+shodanx subdomain -d $1 | tee 6.txt &
 
 # Wait for all background processes to complete
 wait
