@@ -1,9 +1,16 @@
 #!/bin/bash
 
-# Check if the user provided a domain name argument
-if [ $# -eq 0 ]; then
+# Function to display usage instructions
+usage() {
     echo "Usage: $0 <Domain Name>"
     exit 1
+}
+
+# Check for -h option
+if [ "$1" == "-h" ]; then
+    usage
+elif [ $# -eq 0 ]; then
+    usage
 fi
 
 # Run the commands concurrently
