@@ -14,12 +14,12 @@ elif [ $# -eq 0 ]; then
 fi
 
 # Run the commands concurrently
-crtsh -d $1 | tee 1.txt &
-assetfinder $1 | tee 2.txt &
-subdom $1 | tee 3.txt &
-subfinder -d $1 | tee 4.txt &
-shodansubgo -d $1 -s lT9OgIZTFollTgxugbEmriGCWWCQGF5k | tee 5.txt &
-shodanx subdomain -d $1 | tee 6.txt &
+crtsh -d $1 | tee Sub1.txt &
+assetfinder $1 | tee Sub2.txt &
+subdom $1 | tee Sub3.txt &
+subfinder -d $1 | tee Sub4.txt &
+shodansubgo -d $1 -s lT9OgIZTFollTgxugbEmriGCWWCQGF5k | tee Sub5.txt &
+shodanx subdomain -d $1 | tee Sub6.txt &
 
 # Wait for all background processes to complete
 wait
