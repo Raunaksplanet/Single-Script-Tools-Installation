@@ -50,7 +50,7 @@ cat "$file_path" | gau > ParamFuzz3.txt &
 echo -e "${GREEN}4. GoSpider${NC}";
 gospider -a -w -q -c 20 -d 3 -S "$file_path" | ParamFuzz4.txt & 
 
-# Gau
+# GauPlus
 echo -e "${RED}5. GauPlus${NC}";
 echo "$file_path" | gauplus -random-agent -subs -t 20 > ParamFuzz5.txt &
 
