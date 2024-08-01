@@ -54,30 +54,36 @@ usage_httpx_status_code() {
 domain_to_ips() {
     if [ "$1" == "-h" ]; then
         usage_domain_to_ips
+        return
     elif [ -z "$1" ]; then
         usage_domain_to_ips
+        return
     fi
     
     input_file="$1"
+    output_file="DomToIP.txt"
+
+    # Empty the output file if it already exists
+    > "$output_file"
 
     # Process each domain in the input file
     while IFS=$'\r' read -r line; do
-        # Print the domain name
-        echo "$line"
+        # Print the domain name to both the terminal and the output file
+        echo "$line" | tee -a "$output_file"
         
         # Get the IP addresses for the current domain
         ip_addresses=$(host "$line" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | sort -u)
         
-        # Print each IP address on a new line
+        # Print each IP address on a new line to both the terminal and the output file
         while IFS= read -r ip; do
-            echo "$ip"
-    done <<< "$ip_addresses"
+            echo "$ip" | tee -a "$output_file"
+        done <<< "$ip_addresses"
     
-    # Print a blank line after each domain's IP addresses
-    echo
+        # Print a blank line after each domain's IP addresses to both the terminal and the output file
+        echo | tee -a "$output_file"
     done < "$input_file"
 
-    echo "IP addresses have been saved"
+    echo "IP addresses have been saved to $output_file"
 }
 
 # --------------------------------------------------------------------------------
