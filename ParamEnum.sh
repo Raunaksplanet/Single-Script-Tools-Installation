@@ -36,7 +36,7 @@ file_path="$PWD/$1"
 
 # Katana
 echo -e "${RED}1. Katana${NC}";
-katana -silent -ps -jc -jsl -c 50 -r resolvers.txt -u "$file_path" -o ParamFuzz1.txt &
+katana -silent -ps -nc -jc -kf -fx -xhr -aff -jsl -ef woff,css,png,svg,jpg,ico,otf,ttf,woff2,jpeg,gif,svg -u "$file_path" -o ParamFuzz1.txt &
 
 # Waybackurls
 echo -e "${GREEN}2. WayBackUrls${NC}";
@@ -48,7 +48,7 @@ cat "$file_path" | gau > ParamFuzz3.txt &
 
 # GoSpider
 echo -e "${GREEN}4. GoSpider${NC}";
-gospider -a -w -q -c 20 -d 3 -S "$file_path" -o ParamFuzz4.txt &
+gospider -a -w -q -c 20 -d 3 -S "$file_path" | ParamFuzz4.txt & 
 
 # Gau
 echo -e "${RED}5. GauPlus${NC}";
