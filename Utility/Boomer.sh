@@ -3,11 +3,12 @@
 # Function to display general usage instructions
 usage() {
     echo "Usage: Combined All My Mini Scripts Into Single Script
-    -D        Domain To IP's
-    -c        CIDR To IP's
-    -C        CIDR To Domain
-    -H        HTTPX To Specific Status Code Text File
-    -h        Display this help message"
+    -a        Domain To IP's
+    -b        CIDR To IP's
+    -c        CIDR To Domain
+    -d        HTTPX To Specific Status Code Text File
+    -e        Download Directory Listing Enabled Website
+    -f        Display this help message"
     exit 1
 }
 
@@ -15,8 +16,8 @@ usage() {
 
 # Function to display usage instructions for -D
 usage_domain_to_ips() {
-    echo "Usage for -D:
-    Example: $0 -D <Domain File>"
+    echo "Usage for -a:
+    Example: $0 -a <Domain File>"
     exit 1
 }
 
@@ -24,8 +25,8 @@ usage_domain_to_ips() {
 
 # Function to display usage instructions for -c
 usage_cidr_to_ips() {
-    echo "Usage for -c:
-    Example: $0 -c <CIDR File>"
+    echo "Usage for -b:
+    Example: $0 -b <CIDR File>"
     exit 1
 }
 
@@ -33,8 +34,8 @@ usage_cidr_to_ips() {
 
 # Function to display usage instructions for -C
 usage_cidr_to_domain() {
-    echo "Usage for -C:
-    Example: $0 -C <CIDR File>"
+    echo "Usage for -c:
+    Example: $0 -c <CIDR File>"
     exit 1
 }
 
@@ -42,11 +43,19 @@ usage_cidr_to_domain() {
 
 # Function to display usage instructions for -H
 usage_httpx_status_code() {
-    echo "Usage for -H:
-    Example: $0 -H <httpx_output File>"
+    echo "Usage for -d:
+    Example: $0 -d <httpx_output File>"
     exit 1
 }
 
+# --------------------------------------------------------------------------------
+
+# Function to display usage instructions for -e
+usage_directory_listing() {
+    echo "Usage for -e:
+    Example: $0 -e <Main URL>"
+    exit 1
+}
 
 # --------------------------------------------------------------------------------
 
@@ -188,22 +197,48 @@ httpx_status_code() {
 
 # --------------------------------------------------------------------------------
 
+# Function for Downloading  Directory Listing Enabled website Content
+directory_listing() {
+    if [ "$1" == "-h" ]; then
+        usage_directory_listing
+    elif [ -z "$1" ]; then
+        usage_directory_listing
+    fi
+    
+    # URL of the directory listing
+    URL="$1"
+
+    # Create an output directory
+    OUTPUT_DIR="downloaded_files"
+    mkdir -p "$OUTPUT_DIR"
+
+    # Use wget to download all files recursively from the directory listing
+    wget -r -np -nH --cut-dirs=1 -P "$OUTPUT_DIR" "$URL"
+
+    echo "Files downloaded to $OUTPUT_DIR"
+    }
+
+# --------------------------------------------------------------------------------
+
 # Parse options and call appropriate functions
-while getopts ":d:D:c:C:H:h" opt; do
+while getopts ":a:A:b:B:c:C:d:D:e:E:f:F" opt; do
     case $opt in
-        D)
+        a)
             domain_to_ips "$OPTARG"
             ;;
-        c)
+        b)
             cidr_to_ips "$OPTARG"
             ;;
-        C)
+        c)
             cidr_to_domain "$OPTARG"
             ;;
-        H)
+        d)
             httpx_status_code "$OPTARG"
             ;;
-        h)
+        e)
+            directory_listing "$OPTARG"
+            ;;
+        f)
             usage
             ;;
         \?)
