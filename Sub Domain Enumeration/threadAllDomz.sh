@@ -2,7 +2,7 @@
 
 # Function to display usage instructions
 usage() {
-    echo "Usage: $0 <Domain Name or File with Domains>"
+    echo "Usage: $0 <Domain Name > OR <File Name>"
     exit 1
 }
 
