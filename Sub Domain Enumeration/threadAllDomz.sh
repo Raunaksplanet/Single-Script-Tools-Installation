@@ -20,11 +20,11 @@ process_domain() {
     echo "Processing domain: $domain"
 
     crtsh -d "$domain" | anew SubList1.txt &
-    assetfinder "$domain" | anew SubList2.txt &
-    subdom "$domain" | anew SubList3.txt &
+    subdom "$domain" | anew SubList2.txt &
+    shodanx subdomain -d "$domain" -o SubList3.txt &
     subfinder -silent -nc -d "$domain" | anew SubList4.txt &
-    shodansubgo -d "$domain" -s lT9OgIZTFollTgxugbEmriGCWWCQGF5k | anew SubList5.txt &        
-    shodanx subdomain -d "$domain" -o SubList6.txt &
+    assetfinder -subs-only "$domain" | anew SubList5.txt &
+    subdominator -nc -d "$domain" | anew SubList6.txt &
     
     # Wait for the jobs to finish
     wait
