@@ -14,12 +14,12 @@ elif [ $# -eq 0 ]; then
 fi
 
 # Run the commands concurrently
-crtsh -d $1 | anew SubList1.txt
-assetfinder $1 | anew SubList2.txt &
-subdom $1 | anew SubList3.txt &
-subfinder -silent -nc -d $1 | anew SubList4.txt &
-shodansubgo -d $1 -s lT9OgIZTFollTgxugbEmriGCWWCQGF5k | anew SubList5.txt &        
-shodanx subdomain -d $1 -o SubList6.txt &
+crtsh -d "$domain" | anew SubList1.txt &
+subdom "$domain" | anew SubList2.txt &
+shodanx subdomain -d "$domain" -o SubList3.txt &
+subfinder -silent -nc -d "$domain" | anew SubList4.txt &
+assetfinder -subs-only "$domain" | anew SubList5.txt &
+subdominator -nc -d "$domain" | anew SubList6.txt &
 
 # Wait for all background processes to complete
 wait
