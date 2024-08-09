@@ -8,7 +8,7 @@ usage() {
     -c        CIDR To Domain
     -d        HTTPX To Specific Status Code Text File
     -e        Download Directory Listing Enabled Website
-    -f        Display this help message"
+    -f        Show all the cname from the provided file"
     exit 1
 }
 
@@ -54,6 +54,15 @@ usage_httpx_status_code() {
 usage_directory_listing() {
     echo "Usage for -e:
     Example: $0 -e <Main URL>"
+    exit 1
+}
+
+# --------------------------------------------------------------------------------
+
+# Function to display usage instructions for -e
+usage_mass_cname() {
+    echo "Usage for -e:
+    Example: $0 -f <File contain sub-domains>"
     exit 1
 }
 
@@ -216,7 +225,37 @@ directory_listing() {
     wget -r -np -nH --cut-dirs=1 -P "$OUTPUT_DIR" "$URL"
 
     echo "Files downloaded to $OUTPUT_DIR"
-    }
+}
+
+# --------------------------------------------------------------------------------
+
+# Function for Displaying mass CNAME/A
+massCNAME() {
+    if [ "$1" == "-h" ]; then
+        usage_mass_cname
+    elif [ -z "$1" ]; then
+        usage_mass_cname
+    fi
+    
+   # Assign the first argument to the filename variable
+    filename=$1
+
+    # Temporary file to store results
+    temp_file=$(mktemp)
+
+    # Read each line from the file and perform a DNS lookup
+    while read -r sub; do
+        # Use dig to perform a DNS query and filter for CNAME and A records
+        dig "$sub" +noquestion +noauthority +noadditional +nostats | \
+        awk '/IN[[:space:]]+(A|CNAME)/ {printf "%-50s %-6s %s\n", $1, $4, $5}' >> "$temp_file"
+    done < "$filename"
+
+    # Sort the results
+    sort -k2,2 -k1,1 "$temp_file"
+
+    # Clean up the temporary file
+    rm "$temp_file"
+}
 
 # --------------------------------------------------------------------------------
 
@@ -239,21 +278,12 @@ while getopts ":a:A:b:B:c:C:d:D:e:E:f:F" opt; do
             directory_listing "$OPTARG"
             ;;
         f)
-            usage
+            massCNAME "$OPTARG"
             ;;
-        \?)
-            echo "Invalid option: -$OPTARG" >&2
-            usage
-            ;;
-        :)
-            echo "Option -$OPTARG requires an argument." >&2
+        *)
             usage
             ;;
     esac
 done
 
-# If no valid options are provided
-if [ $OPTIND -eq 1 ]; then
-    usage
-fi
-# --------------------------------------------------------------------------------
+if [ $OPTIND -eq 1 ]; then usage; fi
