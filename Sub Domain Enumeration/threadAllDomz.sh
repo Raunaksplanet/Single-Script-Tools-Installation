@@ -28,6 +28,8 @@ process_domain() {
     
     # Wait for the jobs to finish
     wait
+    cat SubList1.txt SubList2.txt SubList3.txt SubList4.txt SubList5.txt SubList6.txt | anew subs.txt;
+    rm SubList1.txt SubList2.txt SubList3.txt SubList4.txt SubList5.txt SubList6.txt;
 }
 
 # Check for -h option
