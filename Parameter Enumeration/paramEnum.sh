@@ -18,7 +18,7 @@ URL="$1"
 katana -silent -ps -nc -jc -jsl -c 50 -ef woff,css,png,svg,jpg,ico,otf,ttf,woff2,jpeg,gif,svg -u "$URL" | anew ParamFuzz1.txt &
 sleep 3
 
-echo "$URL" | waybackurls | anew ParamFuzz2.txt &
+echo "$URL" | waybackurls -no-subs | anew ParamFuzz2.txt &
 sleep 3
 
 echo "$URL" | gau | anew ParamFuzz3.txt &
