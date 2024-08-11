@@ -136,7 +136,7 @@ cidr_to_ips() {
         fi
 
     # Perform reverse DNS lookup using prips and hakrevdns
-    prips "$cidr" | tee -a Finalip.txt
+    prips "$cidr" | tee -a AllIPs.txt
     done < "$CIDR_FILE"
 }
 
@@ -177,7 +177,7 @@ cidr_to_domain() {
         fi
 
     # Perform reverse DNS lookup using prips and hakrevdns
-    prips "$cidr" | hakrevdns -d -t 1000 -r 1.1.1.1 | anew Reversed-DNS-Subdomains.txt
+    prips "$cidr" | hakrevdns -d -t 500 -U | anew Reversed-DNS-Subdomains.txt
     done < "$CIDR_FILE"
 }
 
