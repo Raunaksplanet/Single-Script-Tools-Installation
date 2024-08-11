@@ -19,8 +19,7 @@ katana -silent -ps -nc -jc -jsl -c 50 -ef woff,css,png,svg,jpg,ico,otf,ttf,woff2
 sleep 3
 
 while IFS= read -r url; do
-  echo "Processing URL: $url"
-  echo "$url" | waybackurls -no-subs
+  echo "$url" | waybackurls | anew ParamFuzz2.txt 
 done < "$URL_FILE"
 sleep 3
 
