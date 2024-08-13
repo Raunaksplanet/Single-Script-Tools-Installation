@@ -8,7 +8,8 @@ usage() {
     -c        CIDR To Domain
     -d        HTTPX To Specific Status Code Text File
     -e        Download Directory Listing Enabled Website
-    -f        Show all the cname from the provided file"
+    -f        Show all the cname from the provided file
+    -g        Mass Port Scan"
     exit 1
 }
 
@@ -61,10 +62,20 @@ usage_directory_listing() {
 
 # Function to display usage instructions for -e
 usage_mass_cname() {
-    echo "Usage for -e:
+    echo "Usage for -f:
     Example: $0 -f <File contain sub-domains>"
     exit 1
 }
+
+# --------------------------------------------------------------------------------
+
+# Function to display usage instructions for -e
+usage_mass_Port_Scan() {
+    echo "Usage for -g:
+    Example: $0 -g <File contain sub-domains>"
+    exit 1
+}
+
 
 # --------------------------------------------------------------------------------
 
@@ -259,8 +270,24 @@ massCNAME() {
 
 # --------------------------------------------------------------------------------
 
+# Function for Displaying mass CNAME/A
+massPortScan() {
+    if [ "$1" == "-h" ]; then
+        usage_mass_Port_Scan
+    elif [ -z "$1" ]; then
+        usage_mass_Port_Scan
+    fi
+    
+   # Assign the first argument to the filename variable
+    filename=$1
+
+    naabu -silent -nc -c 50 -l Live.txt -tp 1000
+}
+
+# --------------------------------------------------------------------------------
+
 # Parse options and call appropriate functions
-while getopts ":a:A:b:B:c:C:d:D:e:E:f:F" opt; do
+while getopts ":a:A:b:B:c:C:d:D:e:E:f:F:g:G" opt; do
     case $opt in
         a)
             domain_to_ips "$OPTARG"
@@ -279,6 +306,9 @@ while getopts ":a:A:b:B:c:C:d:D:e:E:f:F" opt; do
             ;;
         f)
             massCNAME "$OPTARG"
+            ;;
+        g)
+            massPortScan "$OPTARG"
             ;;
         *)
             usage
