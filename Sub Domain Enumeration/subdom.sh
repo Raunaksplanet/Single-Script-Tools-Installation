@@ -16,6 +16,7 @@ getSubdomains(){
     curl -s "https://tls.bufferover.run/dns?q=.$1" | jq -r .Results 2>/dev/null | cut -d ',' -f3 | grep -o "\w.*$1"| sort -u >> tmp.txt &
     curl -s "https://api.hackertarget.com/hostsearch/?q=$1" | cut -d ',' -f1 | sort -u >> tmp.txt &
     curl -s "https://rapiddns.io/subdomain/$1?full=1#result" | grep "$1" | awk -F'[<>]' '/'"$1"'/ {print $3}' | sort -u >> tmp.txt &
+    curl -s "https://api.subdomain.center/?domain=$1" | jq -r '.[]' | sort -u >> tmp.txt &
     curl -s "https://riddler.io/search/exportcsv?q=pld:$1" | grep -o "\w.*$1" | cut -d ',' -f6 | sort -u >> tmp.txt &
     curl -s "https://www.threatcrowd.org/searchApi/v2/domain/report/?domain=$1" | jq '.subdomains' | cut -d '"' -f2 | cut -d '[' -f1 | cut -d ']' -f1 | grep . | sort -u >> tmp.txt &
     curl -s "https://api.threatminer.org/v2/domain.php?q=$1&rt=5" | jq -r '.results[]' | sort -u >> tmp.txt &
