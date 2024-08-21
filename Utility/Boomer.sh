@@ -258,7 +258,7 @@ massCNAME() {
     while read -r sub; do
         # Use dig to perform a DNS query and filter for CNAME and A records
         dig "$sub" +noquestion +noauthority +noadditional +nostats | \
-        awk '/IN[[:space:]]+(A|CNAME)/ {printf "%-50s %-6s %s\n", $1, $4, $5}' >> "$temp_file"
+        awk '/IN[[:space:]]+(CNAME)/ {printf "%-50s %-6s %s\n", $1, $4, $5}' >> "$temp_file"
     done < "$filename"
 
     # Sort the results
