@@ -281,7 +281,7 @@ massPortScan() {
    # Assign the first argument to the filename variable
     filename=$1
 
-    naabu -silent -nc -l $filename -tp 1000 -ep 21,22,25,53,80,110,123,135,137,139,143,161,389,443,445,465,514,554,587,993,995,3389,5900,8080,8443,1723
+    naabu -silent -nc -l $filename -tp 1000 -ep 21,22,80,443,554,1723
 }
 
 # --------------------------------------------------------------------------------
