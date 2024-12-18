@@ -10,7 +10,8 @@ usage() {
     -e        Download Directory Listing Enabled Website
     -f        Show all the cname from the provided file
     -g        Mass Port Scan
-    -h        Alien Url's"
+    -h        Alien Url's
+    -i        Virus Total"
     exit 1
 }
 
@@ -86,6 +87,14 @@ usage_mass_alien_url() {
     exit 1
 }
 
+# --------------------------------------------------------------------------------
+
+# Function to display usage instructions for -i
+usage_virus_total() {
+    echo "Usage for -i:
+    Example: $0 -i <domain> or <file>"
+    exit 1
+}
 
 # --------------------------------------------------------------------------------
 
@@ -349,8 +358,98 @@ AlienUrl() {
 
 # --------------------------------------------------------------------------------
 
+# Function for Displaying VirusTotal
+VirusTotal() {
+    if [ "$1" == "-h" ]; then
+        usage_virus_total
+    elif [ -z "$1" ]; then
+        usage_virus_total
+    fi
+    
+       # Function to fetch and display undetected URLs for a domain
+    fetch_undetected_urls() {
+        local domain=$1
+        local api_key_index=$2
+        local api_key
+
+        # Rotate between three API keys
+        if [ $api_key_index -eq 1 ]; then
+            api_key="2d1ed4d97f91c3c18877c02c5d14225e95c2b5dab7c16a524efa0b94cfd1c0a9"
+        elif [ $api_key_index -eq 2 ]; then
+            api_key="2fb731a6845f9d09e17e5334f6a1e2cf29e0131f925c9c43ac7fcf08fe4704ad"
+        else
+            api_key="2fb731a6845f9d09e17e5334f6a1e2cf29e0131f925c9c43ac7fcf08fe4704ad"
+        fi
+
+        local URL="https://www.virustotal.com/vtapi/v2/domain/report?apikey=$api_key&domain=$domain"
+
+        echo -e "\nFetching data for domain: \033[1;34m$domain\033[0m (using API key $api_key_index)"
+        response=$(curl -s "$URL")
+        if [[ $? -ne 0 ]]; then
+            echo -e "\033[1;31mError fetching data for domain: $domain\033[0m"
+            return
+        fi
+
+        undetected_urls=$(echo "$response" | jq -r '.undetected_urls[][0]')
+        if [[ -z "$undetected_urls" ]]; then
+            echo -e "\033[1;33mNo undetected URLs found for domain: $domain\033[0m"
+        else
+            echo -e "\033[1;32mUndetected URLs for domain: $domain\033[0m"
+            echo "$undetected_urls"
+        fi
+    }
+
+    # Function to display a countdown
+    countdown() {
+        local seconds=$1
+        while [ $seconds -gt 0 ]; do
+            echo -ne "\033[1;36mWaiting for $seconds seconds...\033[0m\r"
+            sleep 1
+            : $((seconds--))
+        done
+        echo -ne "\033[0K"  # Clear the countdown line
+    }
+
+    # Initialize variables for API key rotation
+    local api_key_index=1
+    local request_count=0
+
+    # Process input as file or domain
+    if [ -f "$1" ]; then
+        echo "[INFO] Input is a file. Processing domains from file: $1"
+        while IFS= read -r domain; do
+            # Remove the scheme (http:// or https://) if present
+            domain=$(echo "$domain" | sed 's|https\?://||')
+            fetch_undetected_urls "$domain" $api_key_index
+            countdown 20
+
+            # Increment request count and rotate API key if needed
+            request_count=$((request_count + 1))
+            if [ $request_count -ge 5 ]; then
+                request_count=0
+                if [ $api_key_index -eq 1 ]; then
+                    api_key_index=2
+                elif [ $api_key_index -eq 2 ]; then
+                    api_key_index=3
+                else
+                    api_key_index=1
+                fi
+            fi
+        done <"$1"
+    else
+        echo "[INFO] Input is a domain. Processing domain: $1"
+        # Remove the scheme (http:// or https://) if present
+        local domain=$(echo "$1" | sed 's|https\?://||')
+        fetch_undetected_urls "$domain" $api_key_index
+    fi
+
+    echo -e "\033[1;32mAll done!\033[0m"
+
+}
+# --------------------------------------------------------------------------------
+
 # Parse options and call appropriate functions
-while getopts ":a:A:b:B:c:C:d:D:e:E:f:F:g:G:h:H" opt; do
+while getopts ":a:A:b:B:c:C:d:D:e:E:f:F:g:G:h:H:i:I" opt; do
     case $opt in
         a)
             domain_to_ips "$OPTARG"
@@ -375,6 +474,9 @@ while getopts ":a:A:b:B:c:C:d:D:e:E:f:F:g:G:h:H" opt; do
             ;;
         h)
             AlienUrl "$OPTARG"
+            ;;
+        i)
+            VirusTotal "$OPTARG"
             ;;
         *)
             usage
