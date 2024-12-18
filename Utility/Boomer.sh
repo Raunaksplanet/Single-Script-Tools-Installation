@@ -9,13 +9,14 @@ usage() {
     -d        HTTPX To Specific Status Code Text File
     -e        Download Directory Listing Enabled Website
     -f        Show all the cname from the provided file
-    -g        Mass Port Scan"
+    -g        Mass Port Scan
+    -h        Alien Url's"
     exit 1
 }
 
 # --------------------------------------------------------------------------------
 
-# Function to display usage instructions for -D
+# Function to display usage instructions for -a
 usage_domain_to_ips() {
     echo "Usage for -a:
     Example: $0 -a <Domain File>"
@@ -24,7 +25,7 @@ usage_domain_to_ips() {
 
 # --------------------------------------------------------------------------------
 
-# Function to display usage instructions for -c
+# Function to display usage instructions for -b
 usage_cidr_to_ips() {
     echo "Usage for -b:
     Example: $0 -b <CIDR File>"
@@ -42,7 +43,7 @@ usage_cidr_to_domain() {
 
 # --------------------------------------------------------------------------------
 
-# Function to display usage instructions for -H
+# Function to display usage instructions for -d
 usage_httpx_status_code() {
     echo "Usage for -d:
     Example: $0 -d <httpx_output File>"
@@ -60,7 +61,7 @@ usage_directory_listing() {
 
 # --------------------------------------------------------------------------------
 
-# Function to display usage instructions for -e
+# Function to display usage instructions for -f
 usage_mass_cname() {
     echo "Usage for -f:
     Example: $0 -f <File contain sub-domains>"
@@ -69,10 +70,19 @@ usage_mass_cname() {
 
 # --------------------------------------------------------------------------------
 
-# Function to display usage instructions for -e
+# Function to display usage instructions for -g
 usage_mass_Port_Scan() {
     echo "Usage for -g:
     Example: $0 -g <File contain sub-domains>"
+    exit 1
+}
+
+# --------------------------------------------------------------------------------
+
+# Function to display usage instructions for -h
+usage_mass_alien_url() {
+    echo "Usage for -h:
+    Example: $0 -h <domain> or <file>"
     exit 1
 }
 
@@ -286,8 +296,61 @@ massPortScan() {
 
 # --------------------------------------------------------------------------------
 
+# Function for Alien URL
+AlienUrl() {
+    if [ "$1" == "-h" ]; then
+        usage_mass_alien_url
+    elif [ -z "$1" ]; then
+        usage_mass_alien_url
+    fi
+    
+    process_domain() {
+        local domain=$1
+        local output_file="AlienResult.txt"
+        local base_url="https://otx.alienvault.com/api/v1/indicators/domain/$domain/url_list?limit=500&page="
+        local page=1
+
+        echo "[INFO] Scraping URLs for domain: $domain"
+
+        while true; do
+            response=$(curl -s "$base_url$page")
+            urls=$(echo "$response" | jq -r '.url_list[].url' 2>/dev/null)
+
+            if [ -z "$urls" ]; then
+                echo "[INFO] No more URLs for $domain."
+                break
+            fi
+
+            echo "$urls" >>"$output_file"
+            page=$((page + 1))
+        done
+
+        if [ -s "$output_file" ]; then
+            echo "[INFO] URLs saved to $output_file"
+        else
+            echo "[INFO] No URLs found for domain: $domain."
+        fi
+    }
+
+    # Check if input is a file or domain
+    if [ -f "$1" ]; then
+        echo "[INFO] Input is a file. Processing domains from file: $1"
+        while IFS= read -r domain; do
+            if [ -n "$domain" ]; then
+                process_domain "$domain"
+            fi
+        done <"$1"
+    else
+        echo "[INFO] Input is a domain. Processing domain: $1"
+        process_domain "$1"
+    fi
+    
+}
+
+# --------------------------------------------------------------------------------
+
 # Parse options and call appropriate functions
-while getopts ":a:A:b:B:c:C:d:D:e:E:f:F:g:G" opt; do
+while getopts ":a:A:b:B:c:C:d:D:e:E:f:F:g:G:h:H" opt; do
     case $opt in
         a)
             domain_to_ips "$OPTARG"
@@ -309,6 +372,9 @@ while getopts ":a:A:b:B:c:C:d:D:e:E:f:F:g:G" opt; do
             ;;
         g)
             massPortScan "$OPTARG"
+            ;;
+        h)
+            AlienUrl "$OPTARG"
             ;;
         *)
             usage
