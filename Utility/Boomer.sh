@@ -11,7 +11,10 @@ usage() {
     -f        Show all the cname from the provided file
     -g        Mass Port Scan
     -h        Alien Url's
-    -i        Virus Total"
+    -i        Virus Total
+    -j        AllDomz
+    -k        AllUrls
+    -l        Domains to status codes"
     exit 1
 }
 
@@ -93,6 +96,33 @@ usage_mass_alien_url() {
 usage_virus_total() {
     echo "Usage for -i:
     Example: $0 -i <domain> or <file>"
+    exit 1
+}
+
+# --------------------------------------------------------------------------------
+
+# Function to display usage instructions for -i
+usage_AllDomz() {
+    echo "Usage for -j:
+    Example: $0 -j <domain> or <file>"
+    exit 1
+}
+
+# --------------------------------------------------------------------------------
+
+# Function to display usage instructions for -i
+usage_AllUrls() {
+    echo "Usage for -k:
+    Example: $0 -k <domain> or <file>"
+    exit 1
+}
+
+# --------------------------------------------------------------------------------
+
+# Function to display usage instructions for -i
+usage_cleanUrls() {
+    echo "Usage for -l:
+    Example: $0 -l <domain> or <file>"
     exit 1
 }
 
@@ -448,8 +478,48 @@ VirusTotal() {
 }
 # --------------------------------------------------------------------------------
 
+# Function for Displaying All Domains
+AllDomz() {
+    if [ "$1" == "-h" ]; then
+        usage_mass_Port_Scan
+    elif [ -z "$1" ]; then
+        usage_mass_Port_Scan
+    fi
+    
+   # Assign the first argument to the filename variable
+    crtsh -d $1 | anew SubList1.txt; subdom $1 | anew SubList2.txt; shodanx subdomain -d $1 -o SubList3.txt; subfinder -all -recursive -silent -nc -d $1 | anew SubList4.txt; assetfinder -subs-only $1 | anew SubList5.txt; subdominator -nc -d $1 | anew SubList6.txt
+}
+
+# --------------------------------------------------------------------------------
+
+# Function for Displaying All urls
+AllUrls() {
+    if [ "$1" == "-h" ]; then
+        usage_mass_Port_Scan
+    elif [ -z "$1" ]; then
+        usage_mass_Port_Scan
+    fi
+    
+
+    echo $1 | gau --mc 200 --blacklist woff,css,png,svg,jpg,ico,otf,ttf,woff2,jpeg,gif,svg | anew ParamFuzz1.txt; echo $1 | waybackurls | anew ParamFuzz2.txt; echo $1 | hakrawler -subs | anew ParamFuzz3.txt; gospider -a -w -c 50 -m 3 -s $1 | anew ParamFuzz4.txt; katana -silent -nc -jc -c 100 -ef woff,css,png,svg,jpg,ico,otf,ttf,woff2,jpeg,gif,svg -u $1 | anew ParamFuzz5.txt
+}
+
+# --------------------------------------------------------------------------------
+
+# Function for clearn all domains
+CleanDomains() {
+    if [ "$1" == "-h" ]; then
+        usage_mass_Port_Scan
+    elif [ -z "$1" ]; then
+        usage_mass_Port_Scan
+    fi
+    
+   cat $1 | httpx-toolkit -sc -nc -t 500 -silent -title | tee >(grep "\[3[0-9][0-9]\]" | anew 300s.txt) >(grep "\[4[0-9][0-9]\]" | anew 400s.txt) >(grep "\[5[0-9][0-9]\]" | anew 500s.txt) | grep "\[2[0-9][0-9]\]" | anew 200s.txt
+}
+# --------------------------------------------------------------------------------
+
 # Parse options and call appropriate functions
-while getopts ":a:A:b:B:c:C:d:D:e:E:f:F:g:G:h:H:i:I" opt; do
+while getopts ":a:A:b:B:c:C:d:D:e:E:f:F:g:G:h:H:i:I:j:J:k:K:l:L" opt; do
     case $opt in
         a)
             domain_to_ips "$OPTARG"
@@ -477,6 +547,15 @@ while getopts ":a:A:b:B:c:C:d:D:e:E:f:F:g:G:h:H:i:I" opt; do
             ;;
         i)
             VirusTotal "$OPTARG"
+            ;;
+        j)
+            AllDomz "$OPTARG"
+            ;;
+        k)
+            AllUrls "$OPTARG"
+            ;;
+        l)
+            CleanDomains "$OPTARG"
             ;;
         *)
             usage
