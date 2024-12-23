@@ -1,1 +1,0 @@
-crtsh -d $1 | anew SubList1.txt; subdom $1 | anew SubList2.txt; shodanx subdomain -d $1 -o SubList3.txt; subfinder -all -recursive -silent -nc -d $1 | anew SubList4.txt; assetfinder -subs-only $1 | anew SubList5.txt; subdominator -nc -d $1 | anew SubList6.txt
