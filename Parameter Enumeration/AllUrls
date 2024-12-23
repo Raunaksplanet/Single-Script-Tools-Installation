@@ -1,1 +1,0 @@
-echo $1 | gau --mc 200 --blacklist woff,css,png,svg,jpg,ico,otf,ttf,woff2,jpeg,gif,svg | anew ParamFuzz1.txt; echo $1 | waybackurls | anew ParamFuzz2.txt; echo $1 | hakrawler -subs | anew ParamFuzz3.txt; gospider -a -w -c 50 -m 3 -s $1 | anew ParamFuzz4.txt; katana -silent -nc -jc -c 100 -ef woff,css,png,svg,jpg,ico,otf,ttf,woff2,jpeg,gif,svg -u $1 | anew ParamFuzz5.txt
