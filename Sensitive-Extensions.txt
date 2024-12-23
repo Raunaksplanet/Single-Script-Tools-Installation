@@ -1,0 +1,1 @@
+.php,.asp,.aspx,.jsp,.html,.htm,.cgi,.pl,.py,.rb,.js,.xml,.json,.config,.ini,.env,.log,.bak,.old,.sql,.db,.sqlite,.zip,.tar,.gz,.7z,.rar,.csv,.xls,.xlsx,.doc,.docx,.pdf,.txt,.md,.conf,.yml,.yaml,.backup,.swp,.cfm,.css,.wsdl,.ppt,.pptx,.dbf,.mdb,.accdb,.sqlite3,.ora,.dat,.bin,.iso,.img,.exe,.dll,.so,.jar,.war,.ear,.class
