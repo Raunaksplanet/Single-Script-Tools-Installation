@@ -1,0 +1,1 @@
+"olark.com" AND (apikey | api_key | secret | password | credentials | token | bearer | authorization | client_secret | client_id | access_token | private_key | ssh-rsa | ssh-dss | -----BEGIN | -----END | .env | config | aws_access_key_id | aws_secret_access_key | db_password | ftp_password | smtp_password | auth_token | bearer_token | oauth_token | jwt | session_token)
