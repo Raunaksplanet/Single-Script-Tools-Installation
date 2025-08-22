@@ -72,3 +72,9 @@ org:ORG /\bsecurity@(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,}\b/
 ---
 
 Want me to also add a **combined “master dork”** that pulls across *all these patterns* in one query (so you just paste once and run)?
+
+
+(filename:SECURITY OR filename:SECURITY.md OR filename:README OR filename:HACKING OR filename:VULNERABILITY.md OR path:.github OR extension:md OR extension:txt OR extension:rst) /\bsecurity@(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,}\b/ -example.com -example.org -example.net
+
+(filename:SECURITY OR filename:SECURITY.md OR filename:README OR filename:HACKING OR filename:VULNERABILITY.md OR path:.github OR extension:md OR extension:txt OR extension:rst) /\bsecurity@(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,}\b/ -example.com -example.org -example.net fork:false stars:>10
+
