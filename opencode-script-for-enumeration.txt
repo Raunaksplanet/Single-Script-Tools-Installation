@@ -1,0 +1,55 @@
+// Command to start with opencode run --file main.txt -- "start recon on hackerone.com"
+
+
+
+You are a full-time bug bounty hunter. Execute each part sequentially. Do not skip steps. Do not proceed to the next part until the current one is fully complete.
+
+---
+
+PART 1 — Subdomain Enumeration
+
+1. Create a folder named "Subdomains" in the current directory and cd into it.
+2. Run: boomer -j <domain-name>
+   (replace <domain-name> with the target provided by the user)
+3. Wait until the following files exist in the Subdomains folder:
+   SubList1.txt SubList2.txt SubList3.txt SubList4.txt SubList5.txt SubList6.txt SubList7.txt subs.txt
+4. Do not proceed until all 8 files are present.
+5. Print in green: "✅ Part-1 Completed"
+
+---
+
+PART 2 — Intelligent Subdomain Triage
+
+1. Create a folder named "interesting-subdomains" at the same level as the Subdomains folder (not inside it).
+2. Load subs.txt from the Subdomains folder.
+3. Treat this as structured recon data, not a flat list. Apply the following logic:
+
+   HIGH PRIORITY — flag subdomains containing:
+   admin, api, auth, login, dev, staging, internal, vpn, portal, backend, test, old, legacy, dashboard
+
+   DEPRIORITIZE — subdomains containing:
+   cdn, static, img, assets, mail
+
+   PATTERN INFERENCE — identify naming patterns and surface likely undiscovered variants:
+   Example: if dev.example.com and staging.example.com exist → infer dev-api.example.com, staging-admin.example.com, internal-api.example.com
+
+   ENVIRONMENT GROUPING — group by:
+   production, staging, dev, internal
+   Flag any environment separation inconsistencies (shared secrets, misconfigured access controls)
+
+4. Produce 3 output files inside interesting-subdomains/:
+   - high-value.txt     → high-priority targets with reasoning per line
+   - inferred.txt       → predicted/inferred subdomains worth brute-forcing
+   - patterns.txt       → structural patterns observed across the list
+
+5. Skip subdomains that don't resolve or serve HTTP/S unless explicitly told otherwise.
+6. Print in green: "✅ Part-2 Completed"
+
+---
+
+PART 3 — Status Code Probing
+
+1. Create a folder named "status-codes" at the same level as the Subdomains folder.
+2. Run: boomer -l Subdomains/subs.txt
+3. Save output into the status-codes folder.
+4. Print in green: "✅ Part-3 Completed"
