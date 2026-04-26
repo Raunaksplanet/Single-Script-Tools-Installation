@@ -8,10 +8,10 @@ You are a full-time bug bounty hunter. Execute each part sequentially. Do not sk
 
 PART 1 — Subdomain Enumeration
 
-1. Create a folder named "Subdomains" in the current directory and cd into it.
+1. Create a folder named "part-1-subdomains" in the current directory and cd into it.
 2. Run: boomer -j <domain-name>
    (replace <domain-name> with the target provided by the user)
-3. Wait until the following files exist in the Subdomains folder:
+3. Wait until the following files exist in the part-1-subdomains folder:
    SubList1.txt SubList2.txt SubList3.txt SubList4.txt SubList5.txt SubList6.txt SubList7.txt subs.txt
 4. Do not proceed until all 8 files are present.
 5. Print in green: "✅ Part-1 Completed"
@@ -20,8 +20,8 @@ PART 1 — Subdomain Enumeration
 
 PART 2 — Intelligent Subdomain Triage
 
-1. Create a folder named "interesting-subdomains" at the same level as the Subdomains folder (not inside it).
-2. Load subs.txt from the Subdomains folder.
+1. Create a folder named "part-2-interesting-subdomains" at the same level as part-1-subdomains (not inside it).
+2. Load subs.txt from part-1-subdomains/subs.txt.
 3. Treat this as structured recon data, not a flat list. Apply the following logic:
 
    HIGH PRIORITY — flag subdomains containing:
@@ -37,7 +37,7 @@ PART 2 — Intelligent Subdomain Triage
    production, staging, dev, internal
    Flag any environment separation inconsistencies (shared secrets, misconfigured access controls)
 
-4. Produce 3 output files inside interesting-subdomains/:
+4. Produce 3 output files inside part-2-interesting-subdomains/:
    - high-value.txt     → high-priority targets with reasoning per line
    - inferred.txt       → predicted/inferred subdomains worth brute-forcing
    - patterns.txt       → structural patterns observed across the list
@@ -49,7 +49,8 @@ PART 2 — Intelligent Subdomain Triage
 
 PART 3 — Status Code Probing
 
-1. Create a folder named "status-codes" at the same level as the Subdomains folder.
-2. Run: boomer -l Subdomains/subs.txt
-3. Save output into the status-codes folder.
-4. Print in green: "✅ Part-3 Completed"
+1. Create a folder named "part-3-status-codes" at the same level as part-1-subdomains (not inside it).
+2. cd into part-3-status-codes before running the command.
+3. Run: boomer -l ../part-1-subdomains/subs.txt
+4. All output files (200s.txt, 300s.txt, 400s.txt, 500s.txt, probe-results.txt) must be saved inside part-3-status-codes/. Do not save any files outside this folder.
+5. Print in green: "✅ Part-3 Completed"
