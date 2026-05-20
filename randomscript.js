@@ -15,7 +15,27 @@ function typeCheat(code) {
 }
 
 document.addEventListener("keydown", (e) => {
+
   if (e.key === "]") {
-    typeCheat("PANZER");
+    typeCheat("GETTHEREVERYFASTINDEED");
   }
+
+  // h = Full health
+  if (e.key === "[") {
+    typeCheat("ASPIRINEPRECIOUSPROTECTION");
+  }
+
+  // j = Weapons
+  if (e.key === ";") {
+    typeCheat("NUTTERTOOLS");
+  }
+  // l = Fast car
+  if (e.key === "'") {
+    typeCheat("bigbang");
+  }
+
+  if (e.key === "/") {
+    typeCheat("leavemealone");
+  }
+  
 });
