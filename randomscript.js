@@ -37,5 +37,14 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "/") {
     typeCheat("leavemealone");
   }
+
+if (e.key === ",") {
+    typeCheat("onspeed");
+  }
+
+if (e.key === ".") {
+    typeCheat("booooooring");
+  }
   
 });
+
