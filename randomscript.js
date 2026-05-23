@@ -45,6 +45,9 @@ if (e.key === ",") {
 if (e.key === ".") {
     typeCheat("booooooring");
   }
-  
+
+  if (e.key === "m") {
+    typeCheat("alovelyday");
+  }  
 });
 
