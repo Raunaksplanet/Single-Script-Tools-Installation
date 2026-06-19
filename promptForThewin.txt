@@ -1,0 +1,29 @@
+You are assisting with black-box bug bounty research on [TARGET APP/PROGRAM NAME].
+
+Step 1: Map all known services, subdomains, and products under this program's scope. Include API endpoints, internal tool names if known, and any auxiliary services (analytics, payments, identity/SSO, admin panels, etc).
+
+Step 2: Perform threat modelling assuming:
+- This is a black-box test (no source code access)
+- The program has been live for [X years] — prioritize business logic debt from feature creep, deprecated flows, and inter-service trust assumptions
+- Focus on logic flaws over generic vulns (XSS/SQLi only if there's a clear logic-driven bypass angle, e.g. file upload content-type mismatch)
+
+Step 3: Generate exactly 20 unique business logic vulnerabilities, categorized as P1/P2/P3 based on standard bug bounty severity (P1 = critical/financial/account takeover, P2 = high/cross-account/privilege issues, P3 = medium/moderate impact).
+
+For each finding, provide:
+- Title + affected service/subdomain
+- Numbered steps to reproduce (specific enough to execute, not theoretical)
+- Impact (concrete, no DoS/DDoS references, no theoretical-only scenarios)
+- Where relevant, exact HTTP method/endpoint/headers/payload
+
+Prioritize attack patterns like:
+- IDOR / cross-account object access
+- Token/session persistence after revoke, removal, or password change
+- Race conditions in financial or limit-based flows
+- SSRF via webhooks/automation/triggers
+- Privilege confusion between delegated/agency/org-admin roles
+- Permission downgrade not enforced server-side
+- State transition bypasses (archive/unarchive, approve/resubmit)
+
+End with a priority table: Bug # | Title | Effort (Low/Medium/High) | Estimated Reward — sorted by effort-to-reward ratio, and call out the 2-3 quickest wins to test first.
+
+Do not include theoretical-only findings. Do not include anything requiring source code access. Output in clean Markdown.
